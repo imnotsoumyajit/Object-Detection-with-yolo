@@ -23,7 +23,7 @@ mask=cv2.imread("mask.png")
 # tracker instance
 tracker=Sort(max_age=20,min_hits=4,iou_threshold=0.7)
 
-limits=[10,400,800,400] # customised acc to the cam position for the line
+limits=[10,400,800,400] # customized acc to the cam position for the lane
 
 # run webcam
 #
@@ -51,24 +51,18 @@ while cap.isOpened():
             # for the bounding box
             x1,y1,x2,y2=box.xyxy[0]
             x1, y1, x2, y2=int(x1),int(y1),int(x2),int(y2)
-            # vanilla opencv
-            # print(x1,y1,x2,y2)
-            # cv2.rectangle(img,(x1,y1),(x2,y2),(102,241,255),3)
-            # cool lines
+            
             w,h=x2-x1,y2-y1
 
             # for the bounding box
             conf =math.ceil((box.conf[0]*100))/100 # for 2 decimal places
-            # print(conf)
-            # cvzone.putTextRect(img,f'{conf}',(max(0,x1),max(30,y1)))
-
+            
             # for the class name
             cls = int(box.cls[0])
             current_class=classNames[cls]
 
             if current_class=="car" or current_class=="truck" or current_class=="bus" or current_class=="motorbike" and conf>0.4:
-                # cvzone.putTextRect(img, f'{current_class} {conf}', (max(0, x1), max(30, y1)),scale=1,thickness=1,offset=3)
-                # cvzone.cornerRect(img,(x1,y1,w,h),l=7,rt=7)
+                
 
                 current_array=np.array([x1,y1,x2,y2,conf])
                 # a vertical stack
@@ -99,8 +93,7 @@ while cap.isOpened():
 
 
     cv2.imshow("Image",img)
-    # cv2.imshow("Image_Region",img_region)
-    # cv2.waitKey(0)
+    
     if cv2.waitKey(10) & 0xFF==ord('q'):
         break
 cap.release()
