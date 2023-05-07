@@ -23,7 +23,8 @@ mask=cv2.imread("mask.png")
 # tracker instance
 tracker=Sort(max_age=20,min_hits=4,iou_threshold=0.7)
 
-limits=[10,400,800,400] # customized acc to the cam position for the lane
+limits_up=[103,161,296,161] # customized acc to the cam position for the lane
+limits_down=[527,489,735,489] # customized acc to the cam position for the lane
 
 # run webcam
 #
@@ -32,8 +33,9 @@ limits=[10,400,800,400] # customized acc to the cam position for the lane
 # cap.set(4,720) # height
 
 # for video
-cap=cv2.VideoCapture("../Videos/thailand.mp4")
-total_count=[]
+cap=cv2.VideoCapture("../Videos/people.mp4")
+total_count_up=[]
+total_count_down=[]
 while cap.isOpened():
     success,img=cap.read()
     # with mask
@@ -61,7 +63,7 @@ while cap.isOpened():
             cls = int(box.cls[0])
             current_class=classNames[cls]
 
-            if current_class=="car" or current_class=="truck" or current_class=="bus" or current_class=="motorbike" and conf>0.4:
+            if current_class=="person" and conf>0.3:
                 
 
                 current_array=np.array([x1,y1,x2,y2,conf])
@@ -69,7 +71,8 @@ while cap.isOpened():
                 detections=np.vstack((detections,current_array))
 
     tracker_results=tracker.update(detections)
-    cv2.line(img,(limits[0],limits[1]),(limits[2],limits[3]),(0,0,255),5)
+    cv2.line(img,(limits_up[0],limits_up[1]),(limits_up[2],limits_up[3]),(0,0,255),5)
+    cv2.line(img,(limits_down[0],limits_down[1]),(limits_down[2],limits_down[3]),(0,0,255),5)
 
     for result in tracker_results:
 
@@ -85,12 +88,13 @@ while cap.isOpened():
     cx,cy=x1+w//2,y1+h//2
     cv2.circle(img,(cx,cy),7,(255,0,255),cv2.FILLED)
 
-    if limits[0]<cx<limits[2] and limits[1]-20<cy<limits[1]+20:
-        if total_count.count(id)==0:
-            total_count.append(id)
-            cv2.line(img, (limits[0], limits[1]), (limits[2], limits[3]), (0, 255, 0), 5)
-    cvzone.putTextRect(img, f'count = {len(total_count)}',(50,50))
-
+    if limits_up[0]<cx<limits_up[2] and limits_up[1]-20<cy<limits_up[1]+20:
+        if total_count_up.count(id)==0:
+            total_count_up.append(id)
+            cv2.line(img, (limits_up[0], limits_up[1]), (limits_up[2], limits_up[3]), (0, 255, 0), 5)
+    #
+    cvzone.putTextRect(img, f'count up= {len(total_count_up)}',(700,50))
+    cvzone.putTextRect(img, f'count down= {len(total_count_down)}',(700,100))
 
     cv2.imshow("Image",img)
     
