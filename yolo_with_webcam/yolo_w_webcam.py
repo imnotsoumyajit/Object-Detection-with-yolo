@@ -18,12 +18,12 @@ classNames = ["person", "bicycle", "car", "motorbike", "aeroplane", "bus", "trai
               ]
 
 # run webcam
-# cap=cv2.VideoCapture(0)
-# cap.set(3,1280) # width
-# cap.set(4,720) # height
+cap=cv2.VideoCapture(0)
+cap.set(3,1280) # width
+cap.set(4,720) # height
 
 # for video
-cap=cv2.VideoCapture("../Videos/cars.mp4")
+# cap=cv2.VideoCapture("../Videos/cars.mp4")
 
 while cap.isOpened():
     success,img=cap.read()
@@ -38,7 +38,7 @@ while cap.isOpened():
             # vanilla opencv
             # print(x1,y1,x2,y2)
             # cv2.rectangle(img,(x1,y1),(x2,y2),(102,241,255),3)
-            # cvzone
+            # cool lines
             w,h=x2-x1,y2-y1
             cvzone.cornerRect(img,(x1,y1,w,h))
 
